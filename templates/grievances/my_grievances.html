@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(8px);
+        border-radius: 1rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .glass-card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1);
+    }
+    .gradient-header {
+        background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+        border-radius: 1rem;
+        padding: 2rem;
+        color: white;
+    }
+    .status-badge {
+        padding: 0.35em 0.65em;
+        font-size: 0.8rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="gradient-header mb-5 shadow-sm d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-chat-left-text-fill me-2"></i>My Grievances</h2>
+            <p class="mb-0 small">Track and manage all the issues you've raised</p>
+        </div>
+        <a href="{% url 'create_grievance' %}" class="btn btn-light text-primary fw-semibold shadow-sm">
+            + Raise New Grievance
+        </a>
+    </div>
+
+    {% if grievances %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for grievance in grievances %}
+            <div class="col">
+                <a href="{% url 'grievance_detail' grievance.pk %}" class="text-decoration-none text-dark">
+                    <div class="card glass-card p-3 h-100 border-0">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="fw-semibold">{{ grievance.title }}</h5>
+                            <span class="status-badge
+                                {% if grievance.status == 'RESOLVED' %} bg-success text-white
+                                {% elif grievance.status == 'REJECTED' %} bg-danger text-white
+                                {% else %} bg-warning text-dark {% endif %}">
+                                {% if grievance.status == 'RESOLVED' %} ✅
+                                {% elif grievance.status == 'REJECTED' %} ❌
+                                {% else %} ⏳ {% endif %}
+                                {{ grievance.get_status_display }}
+                            </span>
+                        </div>
+                        <p class="text-muted small">{{ grievance.description|truncatechars:100 }}</p>
+                        <p class="text-end text-secondary small mb-0">
+                            <i class="bi bi-clock"></i> {{ grievance.created_at|date:"M d, Y" }}
+                        </p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center p-4 shadow-sm">
+            <i class="bi bi-info-circle me-2"></i>
+            You haven't submitted any grievances yet.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

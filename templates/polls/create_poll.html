@@ -1,0 +1,33 @@
+{% extends "polls/base.html" %}
+
+{% block poll_content %}
+<h2>Create New Poll</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="card mb-3">
+        <div class="card-body">
+            {{ form.as_p }}
+        </div>
+    </div>
+    
+    <div class="card mb-3">
+        <div class="card-header">Poll Choices</div>
+        <div class="card-body">
+            {{ formset.management_form }}
+            {% for form in formset %}
+                <div class="mb-3">
+                    {{ form.choice_text }}
+                    {% if form.errors %}
+                        <div class="text-danger">{{ form.choice_text.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Create Poll</button>
+    <a href="{% url 'polls:poll_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'opportunities/base.html' %}
+
+{% block opportunities_content %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary">
+            <i class="bi bi-briefcase-fill me-2"></i>Available Opportunities
+        </h2>
+        <p class="text-muted">Explore the latest opportunities that are open for applications.</p>
+    </div>
+
+    {% if user.is_superuser %}
+    <div class="mb-3 text-end">
+        <a href="{% url 'post_opportunity' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Post New Opportunity
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        {% for opportunity in opportunities %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-header bg-{% if opportunity.opportunity_type == 'JOB' %}primary{% else %}success{% endif %} text-white">
+                    <h5 class="card-title mb-0">{{ opportunity.get_opportunity_type_display }}</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ opportunity.title }}</h5>
+                    <p class="card-text text-muted">{{ opportunity.description|truncatechars:150 }}</p>
+                    <ul class="list-unstyled">
+                        <li><strong>Category:</strong> {{ opportunity.category.name }}</li>
+                        <li><strong>Location:</strong> {{ opportunity.location }}</li>
+                        <li><strong>Deadline:</strong> {{ opportunity.application_deadline|date:"M d, Y" }}</li>
+                    </ul>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'opportunity_detail' opportunity.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-eye-fill"></i> View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="bi bi-info-circle me-2"></i>No opportunities available at this time.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'opportunities/base.html' %}
+
+{% block opportunities_content %}
+<h2>My Applications</h2>
+
+{% if applications %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Opportunity</th>
+            <th>Type</th>
+            <th>Applied On</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for application in applications %}
+        <tr>
+            <td>{{ application.opportunity.title }}</td>
+            <td>{{ application.opportunity.get_opportunity_type_display }}</td>
+            <td>{{ application.applied_at|date:"M d, Y" }}</td>
+            <td>
+                <span class="badge 
+                    {% if application.status == 'ACCEPTED' %}bg-success
+                    {% elif application.status == 'REJECTED' %}bg-danger
+                    {% else %}bg-warning{% endif %}">
+                    {{ application.get_status_display }}
+                </span>
+            </td>
+            <td>
+                <a href="{% url 'opportunity_detail' application.opportunity.pk %}" class="btn btn-sm btn-info">
+                    View
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">
+    You haven't applied to any opportunities yet.
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Page Header -->
+    <h2 class="text-center text-primary mb-5">Available Documents</h2>
+    
+    <div class="row">
+        {% for doc_type in doc_types %}
+        <div class="col-md-4 mb-4">
+            <!-- Card with Hover Effect -->
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body">
+                    <!-- Card Title -->
+                    <h5 class="card-title text-primary">{{ doc_type.name }}</h5>
+                    <!-- Card Description -->
+                    <p class="card-text text-muted">{{ doc_type.description }}</p>
+                    <!-- Request Button -->
+                    <a href="{% url 'doc_requests:request_create' doc_type.id %}" class="btn btn-primary btn-lg px-4 shadow-sm">
+                        <i class="bi bi-file-earmark-text"></i> Request Document
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

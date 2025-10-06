@@ -1,0 +1,38 @@
+{% extends 'opportunities/base.html' %}
+
+{% block opportunities_content %}
+<div class="card mb-4">
+    <div class="card-header bg-{% if opportunity.opportunity_type == 'JOB' %}primary{% else %}success{% endif %} text-white">
+        <h3>{{ opportunity.title }}</h3>
+    </div>
+    <div class="card-body">
+        <p><strong>Type:</strong> {{ opportunity.get_opportunity_type_display }}</p>
+        <p><strong>Posted by:</strong> {{ opportunity.posted_by.username }}</p>
+        <p><strong>Posted on:</strong> {{ opportunity.posted_at|date:"M d, Y" }}</p>
+        <p><strong>Deadline:</strong> {{ opportunity.application_deadline|date:"M d, Y" }}</p>
+        <p><strong>Location:</strong> {{ opportunity.location }}</p>
+        <p><strong>Category:</strong> {{ opportunity.category.name }}</p>
+        
+        <h4 class="mt-4">Description</h4>
+        <p>{{ opportunity.description }}</p>
+        
+        <h4 class="mt-4">Requirements</h4>
+        <p>{{ opportunity.requirements }}</p>
+    </div>
+</div>
+
+{% if user.is_authenticated and not user.is_superuser %}
+<div class="card">
+    <div class="card-header">
+        <h4>Apply for this Opportunity</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit Application</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

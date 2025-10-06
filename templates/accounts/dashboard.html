@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h2>Dashboard</h2>
+        <p>Welcome to Smart Village Development Portal</p>
+
+        <!-- Image Display -->
+        <div class="my-4">
+            <img src="{% static 'images/dashboard-banner.png' %}" 
+                 alt="Smart Village Overview"
+                 class="img-fluid w-100"
+                 style="max-height: 90vh; object-fit: cover;" />
+        </div>
+
+        {% if user.is_admin %}
+            <div class="mt-4">
+                <h4>Admin Actions</h4>
+                <a href="{% url 'register' %}" class="btn btn-success">Register New User</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

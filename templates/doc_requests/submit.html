@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Page Header -->
+    <h2 class="text-center text-primary mb-4">Upload {{ request.document_name }}</h2>
+
+    <!-- Form Container -->
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Form Fields (Crispy form style) -->
+                <div class="mb-4">
+                    {{ form.as_p }}
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg shadow-lg px-5 py-3">
+                        <i class="bi bi-upload"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

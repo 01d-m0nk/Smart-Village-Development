@@ -1,0 +1,51 @@
+{% extends "village_news/base_news.html" %}
+
+{% block news_content %}
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary">
+            <i class="bi bi-bell-fill me-2"></i>Your Alerts
+        </h2>
+        <p class="text-muted">Stay updated with the latest announcements and village news.</p>
+    </div>
+
+    {% if alerts %}
+    <div class="list-group">
+        {% for alert in alerts %}
+        <a href="{% url 'village_news:announcement_detail' alert.announcement.pk %}" 
+           class="list-group-item list-group-item-action py-3 px-4 rounded-3 mb-2 shadow-sm 
+           {% if not alert.is_read %}list-group-item-warning{% else %}list-group-item-light{% endif %}">
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0 text-truncate">
+                    <i class="bi bi-megaphone-fill text-secondary me-2"></i>{{ alert.announcement.title }}
+                </h5>
+                <small class="text-muted">{{ alert.created_at|timesince }} ago</small>
+            </div>
+
+            <p class="mb-2 text-muted">{{ alert.announcement.content|truncatewords:20 }}</p>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                    Category: <span class="fw-semibold">{{ alert.announcement.get_category_display }}</span>
+                </small>
+                {% if alert.announcement.posted_by.is_superuser %}
+                <span class="badge bg-danger"><i class="bi bi-shield-lock-fill me-1"></i>Official</span>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <i class="bi bi-info-circle-fill me-2"></i>You have no alerts at this time.
+    </div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{% url 'village_news:announcement_list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left-circle me-1"></i>Back to Announcements
+        </a>
+    </div>
+</div>
+{% endblock %}

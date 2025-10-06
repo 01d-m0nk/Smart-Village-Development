@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Card for Edit Health Camp -->
+    <div class="card shadow-lg rounded-3">
+        <div class="card-header bg-primary text-white">
+            <h3><i class="bi bi-calendar-event me-2"></i> Edit Health Camp</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <!-- Buttons Section -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <!-- Cancel Button -->
+                    <a href="{% url 'health:manage_camps' %}" class="btn btn-secondary w-100 w-md-auto">
+                        <i class="bi bi-arrow-left me-2"></i> Cancel
+                    </a>
+                    <!-- Save Changes Button -->
+                    <button type="submit" class="btn btn-success w-100 w-md-auto">
+                        <i class="bi bi-save me-2"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

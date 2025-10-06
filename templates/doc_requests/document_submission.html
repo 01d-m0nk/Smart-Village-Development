@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Page Header -->
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-gradient-primary text-white text-center py-5">
+            <h3><i class="bi bi-upload"></i> Submit {{ doc_request.get_document_type_display }}</h3>
+        </div>
+        <div class="card-body">
+            <!-- Admin Instructions Alert -->
+            <div class="alert alert-info border-left-4 rounded-lg shadow-sm p-4">
+                <h5><i class="bi bi-info-circle"></i> Admin Instructions</h5>
+                <p>{{ doc_request.admin_notes|linebreaks }}</p>
+                <p class="mb-0"><strong>Due Date:</strong> 
+                    <span class="badge bg-warning text-dark">{{ doc_request.due_date|date:"Y-m-d" }}</span>
+                </p>
+            </div>
+
+            <!-- Form for Document Upload -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="{% url 'doc_requests:my_document_requests' %}" class="btn btn-outline-secondary shadow-sm px-4 py-2">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                    <button type="submit" class="btn btn-primary shadow-lg px-5 py-3">
+                        <i class="bi bi-send"></i> Submit Document
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

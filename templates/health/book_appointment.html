@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Card for Booking Appointment -->
+    <div class="card shadow-lg rounded-3">
+        <div class="card-header bg-success text-white">
+            <h3><i class="bi bi-calendar-check me-2"></i> Book Doctor Appointment</h3>
+        </div>
+        <div class="card-body">
+            <!-- Info Alert with Available Health Camps -->
+            <div class="alert alert-info d-flex align-items-center mb-4">
+                <i class="bi bi-info-circle fs-3 me-3"></i>
+                <div>
+                    <strong>Available Health Camps:</strong>
+                    <ul class="mt-2">
+                        {% for camp in active_camps %}
+                            <li>
+                                <strong>{{ camp.location }}</strong> - 
+                                {{ camp.date }} ({{ camp.doctors_available }} doctors available)
+                            </li>
+                        {% empty %}
+                            <li>No active health camps at this time.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Appointment Form -->
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <!-- Action Buttons (Cancel & Submit) -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <!-- Cancel Button -->
+                    <a href="{% url 'health:health_dashboard' %}" class="btn btn-outline-secondary btn-lg shadow-sm">
+                        <i class="bi bi-arrow-left me-2"></i> Cancel
+                    </a>
+                    <!-- Submit Button with Disabled Logic -->
+                    <button type="submit" class="btn btn-success btn-lg shadow-sm" {% if not active_camps %}disabled{% endif %}>
+                        <i class="bi bi-check-circle me-2"></i> Book Appointment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg rounded-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold text-primary">{{ grievance.title }}</h4>
+            <span class="badge bg-{% if grievance.status == 'RESOLVED' %}success{% elif grievance.status == 'REJECTED' %}danger{% else %}warning{% endif %} rounded-pill px-3 py-2">
+                {{ grievance.get_status_display }}
+            </span>
+        </div>
+        <div class="card-body">
+            <!-- Grievance Information -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong class="text-muted">Category:</strong> {{ grievance.category }}</p>
+                    <p><strong class="text-muted">Location:</strong> {{ grievance.location }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong class="text-muted">Submitted On:</strong> {{ grievance.created_at|date:"M d, Y H:i" }}</p>
+                    <p><strong class="text-muted">Last Updated:</strong> {{ grievance.updated_at|date:"M d, Y H:i" }}</p>
+                </div>
+            </div>
+            
+            <!-- Description Section -->
+            <h5 class="text-primary mb-3"><i class="bi bi-pencil-square"></i> Description</h5>
+            <p class="mb-4">{{ grievance.description }}</p>
+            
+            <!-- Image Section -->
+            {% if grievance.image %}
+            <h5 class="text-primary mb-3"><i class="bi bi-image"></i> Attached Image</h5>
+            <img src="{{ grievance.image.url }}" alt="Grievance Image" class="img-fluid rounded shadow-sm mb-4" style="max-height: 300px;">
+            {% endif %}
+            
+            <!-- Assigned To Section -->
+            {% if grievance.assigned_to %}
+            <p><strong class="text-muted">Assigned To:</strong> 
+                <span class="text-primary">{{ grievance.assigned_to.get_full_name|default:grievance.assigned_to.username }}</span>
+            </p>
+            {% endif %}
+            
+            <!-- Resolution Details Section -->
+            {% if grievance.resolution_details %}
+            <h5 class="text-primary mb-3"><i class="bi bi-check-circle"></i> Resolution Details</h5>
+            <div class="alert alert-info rounded-3">
+                {{ grievance.resolution_details }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Back Button -->
+    <a href="{% url 'my_grievances' %}" class="btn btn-outline-secondary mt-3 rounded-pill px-4 py-2">
+        <i class="bi bi-arrow-left-circle me-2"></i> Back to My Grievances
+    </a>
+</div>
+{% endblock %}

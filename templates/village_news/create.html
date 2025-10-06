@@ -1,0 +1,24 @@
+{% extends "village_news/base_news.html" %}
+{% load crispy_forms_tags %}
+
+{% block news_content %}
+<div class="card shadow-sm border-0 rounded-4 bg-light p-4">
+    <h2 class="mb-4 text-primary">
+        <i class="bi bi-megaphone-fill me-2"></i> Create New Announcement
+    </h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-send-check me-1"></i> Post Announcement
+            </button>
+            <a href="{% url 'village_news:announcement_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

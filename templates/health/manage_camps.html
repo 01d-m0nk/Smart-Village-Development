@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Create/Edit Health Camp Form Section -->
+        <div class="col-md-6">
+            <div class="card shadow-lg rounded-3 mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4><i class="bi bi-calendar-plus"></i> Create/Edit Health Camp</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary mt-3 w-100">
+                            <i class="bi bi-save me-2"></i> Save Camp
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Camps & Requests Section -->
+        <div class="col-md-6">
+            <div class="card shadow-lg rounded-3">
+                <div class="card-header bg-info text-white">
+                    <h4><i class="bi bi-list-check"></i> Manage Camps & Requests</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Tab Navigation -->
+                    <ul class="nav nav-tabs" id="managementTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="camps-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#camps" type="button" role="tab">
+                                Health Camps
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="ambulance-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#ambulance" type="button" role="tab">
+                                Ambulance Requests
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="appointments-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#appointments" type="button" role="tab">
+                                Appointments
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content mt-3" id="managementTabsContent">
+                        <!-- Health Camps Tab -->
+                        <div class="tab-pane fade show active" id="camps" role="tabpanel">
+                            <div class="list-group">
+                                {% for camp in camps %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <h5>{{ camp.location }}</h5>
+                                        <small class="text-muted">
+                                            {{ camp.date }} | 
+                                            Doctors: {{ camp.doctors_available }} |
+                                            Status: {% if camp.is_active %}Active{% else %}Inactive{% endif %}
+                                        </small>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'health:edit_camp' camp.id %}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="alert alert-warning">No health camps found</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Ambulance Requests Tab -->
+                        <div class="tab-pane fade" id="ambulance" role="tabpanel">
+                            <div class="list-group">
+                                {% for request in ambulance_requests %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <h5>{{ request.user.get_full_name|default:request.user.username }}</h5>
+                                        <small class="text-muted">
+                                            {{ request.get_emergency_type_display }} | 
+                                            {{ request.location }} |
+                                            {{ request.timestamp|timesince }} ago
+                                        </small>
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-{% if request.status == 'Completed' %}success{% else %}warning{% endif %}">
+                                            {{ request.status }}
+                                        </span>
+                                        <div class="btn-group btn-group-sm mt-1">
+                                            <a href="{% url 'health:update_request' request.id 'Dispatched' %}" 
+                                               class="btn btn-outline-success">
+                                                <i class="bi bi-check-circle"></i>
+                                            </a>
+                                            <a href="{% url 'health:update_request' request.id 'Completed' %}" 
+                                               class="btn btn-outline-primary">
+                                                <i class="bi bi-check-all"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="alert alert-warning">No ambulance requests found</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Appointments Tab -->
+                        <div class="tab-pane fade" id="appointments" role="tabpanel">
+                            <div class="list-group">
+                                {% for appointment in appointments %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <h5>{{ appointment.user.get_full_name|default:appointment.user.username }}</h5>
+                                        <small class="text-muted">
+                                            {{ appointment.camp.location }} | 
+                                            {{ appointment.preferred_time }} |
+                                            {{ appointment.timestamp|timesince }} ago
+                                        </small>
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-{% if appointment.status == 'Completed' %}success{% elif appointment.status == 'Cancelled' %}danger{% else %}primary{% endif %}">
+                                            {{ appointment.status }}
+                                        </span>
+                                        <div class="btn-group btn-group-sm mt-1">
+                                            <a href="{% url 'health:update_appointment' appointment.id 'Completed' %}" 
+                                               class="btn btn-outline-success">
+                                                <i class="bi bi-check-circle"></i>
+                                            </a>
+                                            <a href="{% url 'health:update_appointment' appointment.id 'Cancelled' %}" 
+                                               class="btn btn-outline-danger">
+                                                <i class="bi bi-x-circle"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="alert alert-warning">No appointments found</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

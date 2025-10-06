@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height:100vh; background:#f5f6fa;">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0" style="border-radius: 15px;">
+            <div class="card-header text-center bg-primary text-white" 
+                 style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                <h4 class="mb-0">Login</h4>
+            </div>
+            <div class="card-body p-4">
+                {% if error %}
+                    <div class="alert alert-danger text-center" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+                <div class="text-center mt-3">
+                    <small>
+                        Don’t have an account? <a href="{% url 'register' %}">Register here</a><br>
+                        {% comment %} <a href="{% url 'password_reset' %}">Forgot password?</a> {% endcomment %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

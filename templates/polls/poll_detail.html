@@ -1,0 +1,39 @@
+{% extends "polls/base.html" %}
+
+{% block poll_content %}
+<div class="card">
+    <div class="card-header">
+        <h3>{{ poll.question }}</h3>
+    </div>
+    <div class="card-body">
+        {% if user_vote %}
+            <div class="alert alert-info">
+                You have already voted for: <strong>{{ user_vote.choice.choice_text }}</strong>
+            </div>
+            <a href="{% url 'polls:poll_results' poll.id %}" class="btn btn-info">View Results</a>
+        {% elif poll.active %}
+            <form method="post" action="{% url 'polls:vote' poll.id %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {% for choice in poll.choices.all %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="choice" 
+                                   id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                            <label class="form-check-label" for="choice{{ forloop.counter }}">
+                                {{ choice.choice_text }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">Vote</button>
+            </form>
+        {% else %}
+            <div class="alert alert-warning">This poll is no longer active.</div>
+            <a href="{% url 'polls:poll_results' poll.id %}" class="btn btn-info">View Results</a>
+        {% endif %}
+    </div>
+    <div class="card-footer text-muted">
+        Created by {{ poll.created_by.username }} on {{ poll.created_at|date:"M d, Y" }}
+    </div>
+</div>
+{% endblock %}

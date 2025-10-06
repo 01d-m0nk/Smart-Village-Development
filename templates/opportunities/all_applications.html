@@ -1,0 +1,57 @@
+{% extends 'opportunities/base.html' %}
+
+{% block opportunities_content %}
+<h2 class="mb-4">All Applications</h2>
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>Opportunity</th>
+                <th>Applicant</th>
+                <th>Applied On</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application in applications %}
+            <tr>
+                <td>
+                    <a href="{% url 'opportunity_detail' application.opportunity.pk %}" class="text-decoration-none">
+                        <strong>{{ application.opportunity.title }}</strong>
+                    </a>
+                </td>
+                <td>{{ application.applicant.username }}</td>
+                <td>{{ application.applied_at|date:"M d, Y" }}</td>
+                <td>
+                    <span class="badge 
+                        {% if application.status == 'ACCEPTED' %}bg-success
+                        {% elif application.status == 'REJECTED' %}bg-danger
+                        {% else %}bg-warning{% endif %}">
+                        {{ application.get_status_display }}
+                    </span>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a href="{{ application.resume.url }}" class="btn btn-sm btn-outline-info" target="_blank">
+                            <i class="bi bi-file-earmark-text"></i> View Resume
+                        </a>
+                        <a href="{% url 'update_application' application.pk 'ACCEPTED' %}" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-check-circle"></i> Accept
+                        </a>
+                        <a href="{% url 'update_application' application.pk 'REJECTED' %}" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-x-circle"></i> Reject
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">No applications found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

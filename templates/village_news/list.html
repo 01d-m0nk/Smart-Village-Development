@@ -1,0 +1,45 @@
+{% extends "village_news/base_news.html" %}
+
+{% block news_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary">
+        <i class="bi bi-megaphone-fill me-2"></i>Village Announcements
+    </h2>
+    {% if user.is_staff %}
+    <a href="{% url 'village_news:announcement_create' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle me-1"></i>Create Announcement
+    </a>
+    {% endif %}
+</div>
+
+{% for announcement in page_obj %}
+<div class="card mb-4 shadow-sm rounded-4">
+    <div class="card-header d-flex justify-content-between align-items-center 
+                {% if announcement.is_important %}bg-warning text-dark{% else %}bg-light{% endif %}">
+        <div>
+            <h5 class="mb-0">{{ announcement.title }}</h5>
+            <small class="text-muted">
+                <i class="bi bi-calendar-event me-1"></i>{{ announcement.created_at|date:"M d, Y" }} &nbsp;•&nbsp;
+                <i class="bi bi-person-circle me-1"></i>{{ announcement.posted_by.username }} &nbsp;•&nbsp;
+                <i class="bi bi-folder me-1"></i>{{ announcement.get_category_display }}
+            </small>
+        </div>
+        {% if announcement.is_important %}
+        <span class="badge bg-danger">Important</span>
+        {% endif %}
+    </div>
+    <div class="card-body bg-white">
+        <p class="text-muted">{{ announcement.content|truncatewords:50 }}</p>
+        <a href="{% url 'village_news:announcement_detail' announcement.pk %}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-eye-fill me-1"></i>Read More
+        </a>
+    </div>
+</div>
+{% empty %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle me-2"></i>No announcements at the moment.
+</div>
+{% endfor %}
+
+{% include 'includes/pagination.html' %}
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Page Header -->
+    <h2 class="text-center text-primary mb-5">Your Document Requests</h2>
+
+    <!-- Requests List -->
+    {% for req in requests %}
+    <div class="card mb-4 shadow-sm border-0 rounded-4">
+        <div class="card-body">
+            <!-- Document Name -->
+            <h5 class="card-title text-primary">{{ req.document_name }}</h5>
+            
+            <!-- Request Date -->
+            <p class="card-text text-muted">Requested by admin on {{ req.created_at|date:"Y-m-d" }}</p>
+            
+            <!-- Document Submission Status -->
+            <div class="d-flex justify-content-between align-items-center">
+                {% if req.is_completed %}
+                    <span class="badge bg-success">✅ Submitted</span>
+                {% else %}
+                    <a href="{% url 'doc_requests:submit_document' req.id %}" class="btn btn-primary btn-lg px-4 py-2 shadow-sm">
+                        📤 Upload Document
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-muted">No document requests found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

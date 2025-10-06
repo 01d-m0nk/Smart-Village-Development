@@ -1,0 +1,66 @@
+{% extends 'opportunities/base.html' %}
+
+{% block opportunities_content %}
+<h2>Manage Applications for {{ opportunity.title }}</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Opportunity Details</h5>
+        <p><strong>Type:</strong> {{ opportunity.get_opportunity_type_display }}</p>
+        <p><strong>Posted:</strong> {{ opportunity.posted_at|date:"M d, Y" }}</p>
+        <p><strong>Deadline:</strong> {{ opportunity.application_deadline|date:"M d, Y" }}</p>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Applicant</th>
+                <th>Applied On</th>
+                <th>Status</th>
+                <th>Message</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application in applications %}
+            <tr>
+                <td>{{ application.applicant.username }}</td>
+                <td>{{ application.applied_at|date:"M d, Y" }}</td>
+                <td>
+                    <span class="badge 
+                        {% if application.status == 'ACCEPTED' %}bg-success
+                        {% elif application.status == 'REJECTED' %}bg-danger
+                        {% else %}bg-warning{% endif %}">
+                        {{ application.get_status_display }}
+                    </span>
+                </td>
+                <td>{{ application.message|truncatechars:50 }}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="{{ application.resume.url }}" class="btn btn-sm btn-info" target="_blank">
+                            <i class="bi bi-file-earmark-text"></i> Resume
+                        </a>
+                        <a href="{% url 'update_application' application.pk 'ACCEPTED' %}" class="btn btn-sm btn-success">
+                            <i class="bi bi-check-circle"></i> Accept
+                        </a>
+                        <a href="{% url 'update_application' application.pk 'REJECTED' %}" class="btn btn-sm btn-danger">
+                            <i class="bi bi-x-circle"></i> Reject
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No applications received yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<a href="{% url 'all_applications' %}" class="btn btn-secondary">
+    <i class="bi bi-arrow-left"></i> View All Applications
+</a>
+{% endblock %}

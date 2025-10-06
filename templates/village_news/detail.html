@@ -1,0 +1,32 @@
+{% extends "village_news/base_news.html" %}
+
+{% block news_content %}
+<div class="card shadow-sm rounded-4 mb-4">
+    <div class="card-header {% if announcement.is_important %}bg-warning text-dark{% else %}bg-primary text-white{% endif %} rounded-top-4">
+        <h3 class="mb-0">
+            <i class="bi bi-megaphone-fill me-2"></i>{{ announcement.title }}
+        </h3>
+        <small class="d-block mt-1">
+            <i class="bi bi-calendar-event me-1"></i> 
+            {{ announcement.created_at|date:"M d, Y" }} &nbsp; • &nbsp;
+            <i class="bi bi-person-circle me-1"></i> 
+            {{ announcement.posted_by.username }} &nbsp; • &nbsp;
+            <i class="bi bi-folder me-1"></i> 
+            {{ announcement.get_category_display }}
+        </small>
+    </div>
+    
+    <div class="card-body bg-light">
+        {% if announcement.image %}
+        <img src="{{ announcement.image.url }}" class="img-fluid rounded mb-4" alt="{{ announcement.title }}">
+        {% endif %}
+        <div class="fs-5">
+            {{ announcement.content|linebreaks }}
+        </div>
+    </div>
+</div>
+
+<a href="{% url 'village_news:announcement_list' %}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Back to Announcements
+</a>
+{% endblock %}

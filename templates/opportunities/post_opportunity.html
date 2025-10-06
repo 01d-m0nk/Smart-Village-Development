@@ -1,0 +1,12 @@
+{% extends 'opportunities/base.html' %}
+
+{% block opportunities_content %}
+<h2>Post New Opportunity</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Post Opportunity</button>
+    <a href="{% url 'opportunities_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

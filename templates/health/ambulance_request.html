@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Card for Ambulance Request -->
+    <div class="card shadow-lg rounded-3">
+        <div class="card-header bg-danger text-white">
+            <h3><i class="bi bi-ambulance me-2"></i> Emergency Ambulance Request</h3>
+        </div>
+        <div class="card-body">
+            <!-- Warning Alert -->
+            <div class="alert alert-warning d-flex align-items-center mb-4">
+                <i class="bi bi-exclamation-triangle-fill fs-3 me-3"></i>
+                <div>
+                    <strong>For emergencies only!</strong> Misuse may result in penalties.
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <!-- Action Buttons -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <!-- Cancel Button -->
+                    <a href="{% url 'health:health_dashboard' %}" class="btn btn-outline-secondary btn-lg shadow-sm">
+                        <i class="bi bi-arrow-left me-2"></i> Cancel
+                    </a>
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-danger btn-lg shadow-sm">
+                        <i class="bi bi-send me-2"></i> Request Ambulance
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

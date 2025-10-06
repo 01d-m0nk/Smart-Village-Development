@@ -1,0 +1,24 @@
+{% extends "polls/base.html" %}
+
+{% block poll_content %}
+<h2>Current Polls</h2>
+
+{% if user.is_staff %}
+<a href="{% url 'polls:create_poll' %}" class="btn btn-primary mb-3">Create New Poll</a>
+{% endif %}
+
+<div class="list-group">
+    {% for poll in polls %}
+    <a href="{% url 'polls:poll_detail' poll.id %}" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ poll.question }}</h5>
+            <small>{{ poll.created_at|date:"M d, Y" }}</small>
+        </div>
+        <p class="mb-1">Created by: {{ poll.created_by.username }}</p>
+        <small>{{ poll.choices.count }} options</small>
+    </a>
+    {% empty %}
+    <div class="alert alert-info">No active polls available.</div>
+    {% endfor %}
+</div>
+{% endblock %}

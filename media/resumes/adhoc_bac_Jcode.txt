@@ -1,0 +1,40 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+public class MyClass6 {
+    public static void main(String[] args) {
+        String[] testFiles = {
+            "/etc/passwd",
+            "/etc/hosts",
+            "/proc/version"
+        };
+
+        for (String filePath : testFiles) {
+            System.out.println("\n[Reading] " + filePath);
+            
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+                String line;
+                int lineCount = 0;
+                
+           
+                while ((line = br.readLine()) != null) {
+                    lineCount++;
+                    
+                    
+                    System.out.printf("%4d: %s%n", lineCount, line);
+                    
+                
+                    if (lineCount >= 100) {
+                        System.out.println("[!] Stopped after 100 lines (safety limit)");
+                        break;
+                    }
+                }
+                
+                System.out.printf("[✓] Read %d lines total%n", lineCount);
+                
+            } catch (Exception e) {
+                System.out.println("[X] Failed: " + e.getClass().getSimpleName());
+            }
+        }
+    }
+}
